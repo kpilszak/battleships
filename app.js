@@ -1,7 +1,9 @@
 const gamesBoardContainer = document.querySelector('#gamesboard-container')
 const optionContainer = document.querySelector('.option-container')
 const flipButton = document.querySelector('#flip-button')
-
+const startButton = document.querySelector('#start-button')
+const infoDisplay = document.querySelector('#info')
+const turnDisplay = document.querySelector('#turn-display')
 
 // Option choosing
 let angle = 0
@@ -146,3 +148,39 @@ function highlightArea(startIndex, ship) {
         })
     }
 }
+
+let gameOver = false
+let playerTurn
+
+function startGame() {
+    if (optionContainer.children.length != 0) {
+        infoDisplay.textContent = 'Please place all your pieces first!'
+    } else {
+        const allBoardBlocks = document.querySelectorAll('#computer div')
+        allBoardBlocks.forEach(block => block.addEventListener('click', handleClick))
+    }
+}
+
+let playerHits = []
+let computerHits = []
+
+function handleClick(e) {
+    if (!gameOver) {
+        if (e.target.classList.contains('taken')) {
+            e.target.classList.add('boom')
+            infoDisplay.textContent = "You hit the computer's ship!"
+            let classes = Array.from(e.target.classList)
+            classes = classes.filter(className => className !== 'block')
+            classes = classes.filter(className => className !== 'boom')
+            classes = classes.filter(className => className !== 'taken')
+            playerHits.push(...classes)
+            console.log(playerHits)
+        }
+        if (!e.target.classList.contains('taken')) {
+            infoDisplay.textContent = 'Nothing hit this time.'
+            e.target.classList.add('empty')
+        }
+    }
+}
+
+startButton.addEventListener('click', startGame)
