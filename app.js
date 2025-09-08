@@ -96,7 +96,7 @@ function addShipPiece(user, ship, startId) {
             shipBlock.classList.add('taken')
         })
     } else {
-        if (user === 'computer') addShipPiece(ship)
+        if (user === 'computer') addShipPiece(user, ship, startId)
         if (user === 'player') notDropped = true
     }
 
@@ -120,6 +120,8 @@ function dragStart(e) {
 
 function dragOver(e) {
     e.preventDefault()
+    const ship = ships[draggedShip.id]
+    highlightArea(e.target.id, ship)
 }
 
 function dropShip(e) {
