@@ -161,6 +161,8 @@ function startGame() {
     }
 }
 
+startButton.addEventListener('click', startGame)
+
 let playerHits = []
 let computerHits = []
 
@@ -180,7 +182,47 @@ function handleClick(e) {
             infoDisplay.textContent = 'Nothing hit this time.'
             e.target.classList.add('empty')
         }
+        playerTurn = false
+        const allBoardBlocks = document.querySelectorAll("#computer div")
+        allBoardBlocks.forEach(block => block.replaceWith(block.cloneNode(true)))
+        setTimeout(computerGo, 3000)
     }
 }
 
-startButton.addEventListener('click', startGame)
+function computerGo() {
+    if (!gameOver) {
+        turnDisplay.textContent = "Computer's Go!"
+        turnDisplay.textContent = "The computer is thinking..."
+
+        setTimeout(() => {
+            let randomGo = Math.floor(Math.random() * width * width)
+            const allBoardBlocks = document.querySelectorAll('#player div')
+
+            if (allBoardBlocks[randomGo].classList.contains('taken') && 
+            allBoardBlocks[randomGo].classList.contains('boom')) {
+                computerGo()
+                return
+            } else if (allBoardBlocks[randomGo].classList.contains('taken') &&
+                !allBoardBlocks[randomGo].classList.contains('boom')) {
+                allBoardBlocks[randomGo].classList.add('boom')
+                infoDisplay.textContent = "The computer hit your ship!"
+                let classes = Array.from(e.target.classList)
+                classes = classes.filter(className => className !== 'block')
+                classes = classes.filter(className => className !== 'boom')
+                classes = classes.filter(className => className !== 'taken')
+                computerHits.push(...classes)
+            } else {
+                infoDisplay.textContent = "Nothing hit this time."
+                allBoardBlocks[randomGo].classList.add('empty')
+            }
+        }, 3000)
+
+        setTimeout(() => {
+            playerTurn = true
+            turnDisplay.textContent = "Your Go!"
+            infoDisplay.textContent = "Please take your go."
+            const allBoardBlocks = document.querySelectorAll('#computer div')
+            allBoardBlocks.forEach(block => block.addEventListener('click', handleClick))
+        }, 6000)
+    }
+}
