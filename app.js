@@ -66,7 +66,7 @@ function getValidity(allBoardBlocks, isHorizontal, startIndex, ship) {
         if (isHorizontal) {
             shipBlocks.push(allBoardBlocks[Number(validStart) + i])
         } else {
-            shipBlocks.push(allBoardBlocks[Number(validStart) = i * width])
+            shipBlocks.push(allBoardBlocks[Number(validStart) + i * width])
         }
     }
 
@@ -74,7 +74,7 @@ function getValidity(allBoardBlocks, isHorizontal, startIndex, ship) {
     if (isHorizontal) {
         valid = shipBlocks.every((_shipBlock, index) => shipBlocks[0].id % width !== width - (shipBlocks.length - (index + 1)))
     } else {
-        valid = shipBlock.every((_shipBlock, index) => shipBlocks[0].id < 90 + (width * index + 1))
+        valid = shipBlocks.every((_shipBlock, index) => shipBlocks[0].id < 90 + (width * index + 1))
     }
 
     const notTaken = shipBlocks.every(shipBlock => shipBlock.classList.contains('taken'))
@@ -238,11 +238,12 @@ function computerGo() {
 function checkScore(user, userHits, userSunkShips) {
     function checkShip(shipName, shipLength) {
         if (userHits.filter(storedShipName => storedShipName === shipName).length === shipLength) {
-            infoDisplay.textContent = `You sunk the ${user}'s ${shipName}`
             if (user === 'player') {
+                infoDisplay.textContent = `You sunk the computer's ${shipName}`
                 playerHits = userHits.filer(storedShipName => storedShipName !== shipName)
             }
             if (user === 'computer') {
+                infoDisplay.textContent = `The computer sunk your ${shipName}`
                 computerHits = userHits.filer(storedShipName => storedShipName !== shipName)
             }
             userSunkShips.push(shipName)
